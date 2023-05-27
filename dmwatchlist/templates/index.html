@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+    <p>{{ movies|length }} 记录</p>
+        {% if current_user.is_authenticated %}
+            <form method="post" >
+            名称 <input type="text" name="title" autocomplete="off" required>
+            时间 <input type="text" name="year" autocomplete="off" required>
+            <input class="btn" type="submit" name="submit" value="添加">
+            </form>
+        {% endif %}
+    <ul class="movie-list">
+        {% for movie in movies %}
+            <li>{{ movie.title }} - {{ movie.year }}
+                <span class="float-right">
+                    {% if current_user.is_authenticated %}
+                        <a class="btn" href="{{ url_for('edit', movie_id=movie.id) }}">修改</a>
+                        <form class="inline-form" method="post" action="{{ url_for('delete', movie_id=movie.id) }}">
+                            <input class="btn" type="submit" name="delete" value="删除" onclick="return confirm('Are you sure?')">
+                        </form>
+                    {% endif %}
+                    <a class="imdb" href="http://www.yinghuacd.com/search/{{ movie.title }}" target="_blank" title="Find this movie on IMDb">樱花动漫</a>
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
+    <img alt="Walking Totoro" class="totoro" src="{{ url_for('static', filename='images/totoro.gif') }}" title="to~to~ro~">
+{% endblock %}
